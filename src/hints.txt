@@ -233,6 +233,15 @@ b)  for you own permissions: define permissions.py ==>> then import it in posts/
 
 
 
+
+
+31. Django Rest Framework Settings ===>>>> permission_classes =>> authentication_classes  ==>> render_classes
+
+
+
+
+
+
 19--------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------
 Synchronous basically means that you can only execute one thing at a time. Asynchronous means that you can execute multiple things at a time and you don't have to finish executing the current thing in order to move on to next one.
