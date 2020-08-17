@@ -1,0 +1,238 @@
+1. python manag.py runserver   
+
+2. python manage.py migrate
+
+
+3. python manage.py createsuperuser i.e. admin i.e staff status is True
+
+4. open http://127.0.0.1:8000/admin and add new user  ==>> new user is not staff
+
+
+5. python manage.py startapp posts   ====>>>> create 'posts' app ==>>> posts is an app so add it in settings.py's installed apps list
+
+
+6. inside posts ==>> define models.py
+
+
+7. python manage.py makemigrations  === if u want to update database then use it  always ==== becoz django is not synced with database
+   python manage.py migrate
+
+
+
+8. Model to admin ==>>>> register Post model into admin site (admin.py)
+
+
+9. customize admin ==> how you want to show your Post model to admin   ==>> class PostModelAdmin(admin.ModelAdmin):
+
+
+10. take basic understanding of CRUD
+
+11.   Writing our first View --->> define views.py  ===>>>> function based view  ==>> for class based view 
+
+
+12. add project to appp via url : mapping  url to view :   url(r'^posts/', include("posts.urls", namespace='posts')) in trydjango1.9/urls==>>>> 
+
+
+13. show view of app via url : In app urls 
+
+
+14. django templates
+
+
+15. query set basics tuts on terminal : python manage.py shell ==>===> from posts.models import Post ==>>> Posts.objects.all()  =======>> Posts.objects.filter(title = "abc")  ====>> Posts.object.create(title = 'New Post' content = 'new content')
+
+b)  queryset = Posts.objecs.all()
+    for obj in queryset:
+          print(obj,title,obj.content,obj.updated)
+
+
+
+
+16. get_object_or_404  ==>> get post i.e. post detail view in posts/views.py
+
+
+
+17. a) Dynamic Url Routing & Patterns == posts/urls.py
+
+	b) use of namespace in trydjango19/urls.py   ===>>>> now change posts/models.py's reverse function defined in get_absolute_url function ===>> if get_absolute_url is defined then see post_list.html for brief understanding  ====>> format is also changed when namespace is used , see post_list.html 
+
+
+	c) using name in posts/urls.py and namespace in trydjango19/urls.py and get_absolute_url in posts/models.py      
+
+
+
+
+
+18.post_create :  define forms.py  ==>> define post_create function in view.py ===>> define forms.html ===>>> importance of  PostForm(request.POST or None, request.FILES or None)
+
+
+19.post_update : 
+
+20. messages framework  and role of get_absolute_url()
+
+
+
+21. delete blog
+
+
+22. templates and inheritance : base html  ==>>> include any html in base html(eg.message_display.html is included in base.html) ==>> inherit any html from base html
+
+
+
+
+
+
+23. static files : check settings.py for static_urls and static_file_dirs  ===>>>> in trydjango19/urls.py include static_url inside if setting.debug ===>>> check if static_root is setuped via python manage.py collectstatic ==>> if it gives error that menas no static root is setupped ===>>> so go to setings.py and set static_root ==>>again chekck via command ==>> copy all static files inside static_cdn ==> if u run again command then itshoukd run successfully. ==>>> this command copies all files and folder of static folder to static_cdn ==>> that means sendig it to server====>>>>our static files will be wrritten inside static folder but after running command they will come into the static_csn folder.
+
+ ====>> 'load staticfiles' in base.html(go to this html for more info)
+
+24. media-cdn  ==>>media is any file uploaded by user ===>>>> also like static files
+
+
+
+25. post view in reverse timestamp order and pagination ===>>> define in views.py ==>>>> and after that in post_list.html(see that for more detail)  ===>>> set page_request_vaar inside views.py of posts and set that variable at  all the place where needed so that more dynamic can be made ==>> now change variable name at one place will affect/change all the place where it has been used. 
+
+
+
+
+
+
+
+26.file upload with file field and image field:    =>> request_files or none inside PostForm() in views.py.post_create of Posts
+
+
+
+27. slugfield  ==>> import from django.signals 'presave'==>>presave means before saving into model do something , here we will perform creation of slug field inside models.py via slugify
+
+
+
+
+28. a) share social links : request.build_absolute_uri :  share_string in views.py and  in templates also
+
+  b)  custom template tag :  define urlify.py : load urlify inside template(see post_detail.html for more detail) : truncatecharatcers + urlify + get_absolute_uri ::: also u can use concept of presave to ceate shareable text and then save that too into model.
+
+
+
+
+
+29. Basic user permissions : is_staff : is_superuser
+
+30. Item publish date and draft
+
+31. Model Managers & Handling Drafts : inside views.py's post_list's use 'publish_lte' to filter
+									 : Model Managers : 
+
+
+
+
+
+32. search post : using get request ==> see views.py for more details===>>> importing Q
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Django Rest Framework
+
+1. installation  :: remember to add  'rest_framework' in installed_apps inside settings.py
+
+2. APIView and ListAPIView : create api folder module with init.py inside posts folder define it's urls.py and views.py : also add post-api url in urlpattern  of trydjango19's url.py
+
+3. define serializers.py and import this in api/views.py and use it as serialzer class
+
+
+4. Retrieve API View aka Detail View : add PostDetailApiView Class in posts/api/views.py , then import this class iin posts/api/urls.py    : remember to add lookup_field in respective View Class (eg. slug) : if u want create another serializer eg: PostDetailAPIViewSerializer
+
+
+
+5. Update & Destroy Delete API View
+
+6. a) Create Serializer and Create API View : auomatically creates slug with pre_save : that means django rest frmaework absolutely works with django 
+
+	b) changed create and update view with createupdateapiview so that both can be seen as same and now no longer update view is allowing us to change the slug that is really important becoz it is field to identify unique blog
+	===>> for more detail visit : https://www.youtube.com/watch?v=dfIB-LthIpE&list=PLEsfXFp6DpzTOcOVdZF-th7BS_GYGguAS&index=9
+
+
+
+
+7. Associate User with View Methods : in posts/api/views.py inside both create and update view  define a function perform_create and perform_update and set it to requested_user so that if post is created or updated then it shows the user who has done it instead of showing only one fixed/default user. : one problem here is that when post created by some other(say user1) is updated by some other user(say  user2) then that blog's original user(user1) is replaced with user2.: Have a look here if you are creating your own app/web.
+
+
+
+
+8. Custom permissions : a) allowany,isauthenticated, isadminuser, ==>> apply on each api view  ===>>> these are by deafault permission 
+
+
+b)  for you own permissions: define permissions.py ==>> then import it in posts/api/views.py
+
+
+
+
+
+9. Filtering a Queryset in a ListAPIView : qsearch vs search fields-====>> combining both search methods ===>> search,q and ordering
+
+
+10. pagination ==>> limit and offset and q search ==>> offsett means page number ===>>> creating your own pagination method so define pagination.
+  ===>>> limit offset pagination ==>>> page pagination(used in blog project also) so that search can be  done by "page".  
+
+
+
+
+
+11. Hyperlinked Identity Field for URL : modify searialir.py and import hyperlinkdidentityfield
+
+
+
+
+12.  Serializer Method Field : 
+
+
+
+13. Comments app and API 
+
+
+14. Comment Children & Reply Count
+
+
+15.  Comments in Post Detail API View
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+25. user api : define serializer.py ==>> define views.py ==>> define urls.py ===>> modify main project urls.py  ===>>> extra_keyword in serializers.py is an important concept to know, have a look there
+
+
+
+
+26.  ModelSerializer Create Method : creating user through POST api : override create method with validated_data argument (see serializers.py's UserCreateSerializer's create() for more detail) 
+
+
+
+
+27. Serializer Validation ===>> valdating unique email==>> see serilizers.py 
+
+
+28.  User Login serializer
+
+
+30. User Detail Serializer
+
+
+
+19--------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+Synchronous basically means that you can only execute one thing at a time. Asynchronous means that you can execute multiple things at a time and you don't have to finish executing the current thing in order to move on to next one.
